@@ -52,7 +52,7 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
 
     return (
         response['spreadsheetId'],
-        f'https://docs.google.com/spreadsheets/d/{response['spreadsheetId']}/edit',
+        f'https://docs.google.com/spreadsheets/d/{response["spreadsheetId"]}/edit',
     )
 
 
