@@ -24,3 +24,10 @@ class BaseCharityDonationModel(Base):
             name='check_invested_amount_less_equal_full_amount',
         ),
     )
+
+    def __repr__(self):
+        return (
+            f'Сумма пожертвования: {self.full_amount}, '
+            f'сумма, находящиеся в проекте: {self.invested_amount}, '
+            f'полностью инвестировано?: {self.fully_invested}'
+        )
