@@ -7,7 +7,6 @@ from app.models import CharityProject
 DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
 COLUMNS = 5
 ROWS = 100
-RANGE = 'A1:C30'
 SPREADSHEET_TEMPLATE = {
     'properties': {
         'title': 'Отчёт от {now_date_time}',
