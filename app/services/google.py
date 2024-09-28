@@ -49,10 +49,11 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
+    spreadsheet_id = response['spreadsheetId']
 
     return (
-        response['spreadsheetId'],
-        f'https://docs.google.com/spreadsheets/d/{response["spreadsheetId"]}/edit',
+        spreadsheet_id,
+        f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit',
     )
 
 
