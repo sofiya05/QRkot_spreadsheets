@@ -9,7 +9,7 @@ class Donation(BaseCharityDonationModel):
 
     def __repr__(self):
         return (
-            f'ид пользователя: {self.user_id}, '
+            f'Id пользователя: {self.user_id}, '
             f'Комментарий: {self.comment}, '
             f'{super().__repr__()}'
         )
