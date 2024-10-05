@@ -92,13 +92,19 @@ async def spreadsheets_update_value(
     total_rows = len(table_values)
     if total_rows > ROWS:
         raise ValueError(
-            f"Таблица не поместится: требуется {total_rows} строк, доступно {ROWS}."
+            (
+                'Таблица не поместится: '
+                f'требуется {total_rows} строк, доступно {ROWS}.'
+            )
         )
 
     total_columns = max(map(len, table_values))
     if total_columns > COLUMNS:
         raise ValueError(
-            f"Таблица не поместится: требуется {total_columns} колонок, доступно {COLUMNS}."
+            (
+                'Таблица не поместится: '
+                f'требуется {total_columns} колонок, доступно {COLUMNS}.'
+            )
         )
 
     update_body = {'majorDimension': 'ROWS', 'values': table_values}
