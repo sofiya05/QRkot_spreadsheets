@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
-from aiogoogle import Aiogoogle, AiogooleError
-from aiogoogle.excs import HTTPError
+from aiogoogle import Aiogoogle, AiogoogleError
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
