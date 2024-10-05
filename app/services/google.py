@@ -1,6 +1,8 @@
+from copy import deepcopy
 from datetime import datetime
 
 from aiogoogle import Aiogoogle
+
 from app.core.config import settings
 from app.models import CharityProject
 
@@ -19,8 +21,8 @@ SPREADSHEET_TEMPLATE = {
                 'sheetId': 0,
                 'title': 'Лист1',
                 'gridProperties': {
-                    'rowCount': 0,
-                    'columnCount': 0,
+                    'rowCount': ROWS,
+                    'columnCount': COLUMNS,
                 },
             }
         }
@@ -36,25 +38,15 @@ TABLE_VALUES_TEMPLATE = [
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
     """Функция создания таблицы."""
     service = await wrapper_services.discover('sheets', 'v4')
-    spreadsheet_body = SPREADSHEET_TEMPLATE.copy()
+    spreadsheet_body = deepcopy(SPREADSHEET_TEMPLATE)
     spreadsheet_body['properties']['title'] = spreadsheet_body['properties'][
         'title'
     ].format(now_date_time=datetime.now().strftime(DATE_TIME_FORMAT))
-    spreadsheet_body['sheets'][0]['properties']['gridProperties'][
-        'rowCount'
-    ] = ROWS
-    spreadsheet_body['sheets'][0]['properties']['gridProperties'][
-        'columnCount'
-    ] = COLUMNS
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
-    spreadsheet_id = response['spreadsheetId']
 
-    return (
-        spreadsheet_id,
-        f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit',
-    )
+    return response['spreadsheetId'], response['spreadsheetUrl']
 
 
 async def set_user_permissions(
@@ -83,7 +75,7 @@ async def spreadsheets_update_value(
     wrapper_services: Aiogoogle,
 ):
     service = await wrapper_services.discover('sheets', 'v4')
-    table_values = [row.copy() for row in TABLE_VALUES_TEMPLATE]
+    table_values = deepcopy(TABLE_VALUES_TEMPLATE)
     table_values[0][1] = table_values[0][1].format(
         now_date_time=datetime.now().strftime(DATE_TIME_FORMAT)
     )
@@ -97,11 +89,23 @@ async def spreadsheets_update_value(
         for project in projects
     )
 
+    total_rows = len(table_values)
+    if total_rows > ROWS:
+        raise ValueError(
+            f"Таблица не поместится: требуется {total_rows} строк, доступно {ROWS}."
+        )
+
+    total_columns = max(map(len, table_values))
+    if total_columns > COLUMNS:
+        raise ValueError(
+            f"Таблица не поместится: требуется {total_columns} колонок, доступно {COLUMNS}."
+        )
+
     update_body = {'majorDimension': 'ROWS', 'values': table_values}
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(
             spreadsheetId=spreadsheet_id,
-            range=f'A1C1:A{len(table_values)}C{max(map(len, table_values))}',
+            range=f'A1C1:A{total_rows}C{total_columns}',
             valueInputOption='USER_ENTERED',
             json=update_body,
         )

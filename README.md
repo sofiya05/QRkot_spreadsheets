@@ -65,8 +65,8 @@ uvicorn main:app --reload
 
 После запуска проекта, документация будет доступна по адресам:
 
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) - swagger
-[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) - redoc
+[swagger](http://127.0.0.1:8000/docs)
+[redoc](http://127.0.0.1:8000/redoc)
 
 ## Автор
 

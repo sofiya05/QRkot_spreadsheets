@@ -29,5 +29,7 @@ class BaseCharityDonationModel(Base):
         return (
             f'Сумма пожертвования: {self.full_amount}, '
             f'сумма, находящиеся в проекте: {self.invested_amount}, '
-            f'полностью инвестировано?: {self.fully_invested}'
+            f'полностью инвестировано?: {self.fully_invested}, '
+            f'Дата создания: {self.create_date}, '
+            F'Дата закрытия: {self.close_date}'
         )

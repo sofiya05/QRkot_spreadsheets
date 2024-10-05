@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from aiogoogle import Aiogoogle
+from aiogoogle.excs import HTTPError
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,7 +27,7 @@ router = APIRouter()
 async def get_report(
     session: AsyncSession = Depends(get_async_session),
     wrapper_services: Aiogoogle = Depends(get_service),
-) -> list[CharityProjectDB]:
+) -> str:
     """
     Создание отчёта в Google таблицу
     с закрытыми проектами отсортированными
@@ -46,8 +47,8 @@ async def get_report(
             projects,
             wrapper_services,
         )
-    except Exception as error:
-        HTTPException(
+    except HTTPError as error:
+        raise HTTPException(
             status_code=HTTPStatus.BAD_GATEWAY,
             detail=f'Произошла ошибка: {error}',
         )
