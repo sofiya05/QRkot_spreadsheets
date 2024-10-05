@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from aiogoogle import Aiogoogle
+from aiogoogle import Aiogoogle, AiogooleError
 from aiogoogle.excs import HTTPError
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,7 +47,7 @@ async def get_report(
             projects,
             wrapper_services,
         )
-    except HTTPError as error:
+    except AiogoogleError as error:
         raise HTTPException(
             status_code=HTTPStatus.BAD_GATEWAY,
             detail=f'Произошла ошибка: {error}',
